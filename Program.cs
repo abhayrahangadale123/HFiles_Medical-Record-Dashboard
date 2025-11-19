@@ -1,0 +1,109 @@
+﻿
+using System.Text;
+using HfilesMedicalDashboard_Api.DataAccessLayer.DAL;
+using HfilesMedicalDashboard_Api.DataAccessLayer.IDAL;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
+
+
+namespace HfilesMedicalDashboard_Api
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+            // Add services
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddControllers();
+
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IFileService, FileService>();
+
+
+            //builder.Services.AddScoped<DbServices>();
+            // CORS - allow frontend local
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocal", p =>
+                {
+                    p.WithOrigins("http://localhost:3000")
+                     .AllowAnyHeader()
+                     .AllowAnyMethod()
+                     .AllowCredentials();
+                });
+            });
+
+
+            // JWT Config
+            var jwt = builder.Configuration.GetSection("Jwt");
+            var key = Encoding.UTF8.GetBytes(jwt["Key"]);
+
+            //        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //.AddJwtBearer(options =>
+            //{
+            //    options.RequireHttpsMetadata = false;
+            //    options.SaveToken = true;
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuer = true,
+            //        ValidateAudience = true,
+            //        ValidIssuer = jwt["Issuer"],
+            //        ValidAudience = jwt["Audience"],
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Key")),
+            //        ClockSkew = TimeSpan.Zero
+            //    };
+
+            //});
+            // Program.cs या Startup.cs में
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = "your-issuer",
+                        ValidAudience = "your-audience",
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("key"))
+                    };
+
+                    // ये line हटाओ या false करो अगर cookie auth भी चल रहा है
+                    // options.RequireHttpsMetadata = false; // dev only
+                });
+
+            // Important: Cookie auth को disable करो अगर JWT only use करना है
+            builder.Services.AddAuthentication().AddCookie(options => {
+                options.Events.OnRedirectToLogin = context => {
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
+            });
+
+            var app = builder.Build();
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+            app.UseCors("AllowLocal");
+            app.UseCors("AllowNextJs");
+            app.UseHttpsRedirection();
+
+            app.UseAuthorization();
+
+
+            app.MapControllers();
+
+            app.Run();
+        }
+    }
+}

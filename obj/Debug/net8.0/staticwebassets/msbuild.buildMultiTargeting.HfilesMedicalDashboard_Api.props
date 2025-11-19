@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\HfilesMedicalDashboard_Api.props" />
+</Project>
