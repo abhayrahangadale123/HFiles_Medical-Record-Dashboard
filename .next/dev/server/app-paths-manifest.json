@@ -1,0 +1,6 @@
+{
+  "/Deshbord/page": "app/Deshbord/page.js",
+  "/Login/page": "app/Login/page.js",
+  "/Singup/page": "app/Singup/page.js",
+  "/page": "app/page.js"
+}

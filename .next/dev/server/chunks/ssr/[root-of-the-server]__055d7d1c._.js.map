@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///E:/C_Sharp/Frontend/my-app/app/Deshbord/page.tsx"],"sourcesContent":[" import Deshbord from '../compontes/Deshbordaaa';\r\n \r\n export default function DeshbordPage() {\r\n   return (\r\n     <div>\r\n       <Deshbord />\r\n     </div>\r\n   );\r\n }\r\n \r\n\r\n "],"names":[],"mappings":";;;;;;;;;;;;AAEgB,SAAS;IACtB,qBACE,8OAAC;kBACC,cAAA,8OAAC;;;;;;;;;;AAGP"}}]
+}
