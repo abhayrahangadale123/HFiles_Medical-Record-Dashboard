@@ -61,7 +61,7 @@ namespace HfilesMedicalDashboard_Api
             //    };
 
             //});
-            // Program.cs या Startup.cs में
+        
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -75,12 +75,8 @@ namespace HfilesMedicalDashboard_Api
                         ValidAudience = "your-audience",
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("key"))
                     };
-
-                    // ये line हटाओ या false करो अगर cookie auth भी चल रहा है
-                    // options.RequireHttpsMetadata = false; // dev only
                 });
-
-            // Important: Cookie auth को disable करो अगर JWT only use करना है
+            
             builder.Services.AddAuthentication().AddCookie(options => {
                 options.Events.OnRedirectToLogin = context => {
                     context.Response.StatusCode = 401;
