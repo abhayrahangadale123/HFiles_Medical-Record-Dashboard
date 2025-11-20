@@ -45,22 +45,7 @@ namespace HfilesMedicalDashboard_Api
             var jwt = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwt["Key"]);
 
-            //        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //.AddJwtBearer(options =>
-            //{
-            //    options.RequireHttpsMetadata = false;
-            //    options.SaveToken = true;
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuer = true,
-            //        ValidateAudience = true,
-            //        ValidIssuer = jwt["Issuer"],
-            //        ValidAudience = jwt["Audience"],
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Key")),
-            //        ClockSkew = TimeSpan.Zero
-            //    };
-
-            //});
+        
         
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
